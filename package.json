@@ -1,0 +1,47 @@
+{
+  "name": "sigil.ts",
+  "version": "0.0.1",
+  "description": "inimalistic typescript object manipulation library",
+  "main": "dist/sigil.js",
+  "typings": "src/sigil.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexdrel/sigil.ts"
+  },
+  "scripts": {
+    "start": "tsc -p src -d -watch",
+    "build": "tsc -p src -d",
+    "test": "karma start karma.config.js --browsers Firefox --single-run",
+    "test:watch": "karma start karma.config.js"
+  },
+  "keywords": [
+    "object",
+    "typescript",
+    "underscore",
+    "lodash"
+  ],
+  "author": "Alex Drel",
+  "license": "MIT",
+  "engines": {
+    "node": "4.x.x || 6.x.x",
+    "npm": "3.x.x"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/jasmine": "^2.5.46",
+    "jasmine-core": "^2.5.2",
+    "json-loader": "^0.5.4",
+    "karma": "^1.5.0",
+    "karma-chrome-launcher": "^2.0.0",
+    "karma-firefox-launcher": "^1.0.1",
+    "karma-jasmine": "^1.1.0",
+    "karma-sourcemap-loader": "^0.3.7",
+    "karma-webpack": "^2.0.3",
+    "ts-loader": "^2.0.3",
+    "tslint": "^4.5.1",
+    "typescript": "^2.2.2",
+    "webpack": "^2.3.2",
+    "webpack-dev-server": "^2.4.2",
+    "yaml-loader": "^0.4.0"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "extends": "tslint:recommended",
+  "rules": {
+    "curly": true,
+    "no-unused-expression": false,
+    "member-access": [
+      false
+    ],
+    "interface-name": [
+      false
+    ],
+    "quotemark": [
+      false
+    ],
+    "object-literal-sort-keys": false,
+    "prefer-for-of": false,
+    "array-type": [
+      false
+    ]
+  },
+  "jsRules": {
+    "curly": true
+  },
+  "rulesDirectory": [
+  ]
+}

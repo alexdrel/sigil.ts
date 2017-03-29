@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "noUnusedParameters": true,
+    "noUnusedLocals": true,
+    "sourceMap": true
+  },
+  "include": [
+    "../node_modules/@types/jasmine/index.d.ts",
+    "*.ts"
+  ]
+}
