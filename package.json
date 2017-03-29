@@ -1,7 +1,7 @@
 {
   "name": "sigil.ts",
   "version": "0.0.1",
-  "description": "inimalistic typescript object manipulation library",
+  "description": "Minimalistic typescript object manipulation library",
   "main": "dist/sigil.js",
   "typings": "src/sigil.ts",
   "repository": {
