@@ -1,4 +1,3 @@
-
 // coalesce
 export function notnull<T>(v: T, v1: T, v2?: T): T {
   return (v != null ? v : (v1 != null ? v1 : v2));
@@ -9,27 +8,31 @@ export function defined<T>(v: T, v1: T, v2?: T): T {
 }
 
 // Predicates
-export function NotNull(v: any) {
-  return v != null;
-}
-
-export function Defined(v: any) {
-  return v !== undefined;
-}
-
 // empty array and propertyless object considered falsy
-export function Truly(v: any) {
+function Bool(v: any, strictString?: boolean): boolean | null {
   if (v instanceof Array) {
     return v.length > 0;
   } else if (v instanceof Object) {
     let r = false;
     forEach(() => r = true, v);
     return r;
-  } else if (typeof v === 'string' && !isNaN(v as any)) {
-    return !!(+v);
+  } else if (typeof v === 'string') {
+    if (!isNaN(v as any)) {
+      return !!(+v);
+    } else if (strictString) {
+      switch (v.toLowerCase()) {
+        case 'true': return true;
+        case 'false': return false;
+        default: return null;
+      }
+    }
   }
   return !!v;
 }
+
+export const NotNull = (v: any) => v != null;
+export const Defined = (v: any) => v !== undefined;
+export const Truly = (v: any) => Bool(v) as boolean;
 
 // object forEach and (un-)conditional assign
 export type VK<T, R> = (v: any, k: keyof T) => R;
@@ -55,16 +58,16 @@ export function assignFieldsWhen<T extends object>(
   filter: VK<T, boolean> | true,
   target: T,
   sourceS: Few<Partial<T>>,
-  ): T {
+): T {
   if (target && filter == null) {
     throw new TypeError("Cannot convert undefined or null to object");
   }
   let to = Object(target);
-  let sources =  sourceS instanceof Array ? sourceS : [sourceS];
+  let sources = sourceS instanceof Array ? sourceS : [sourceS];
   for (let index = 0; index < sources.length; index++) {
-    forEach( (v, k) => {
+    forEach((v, k) => {
       if ((filter === true || filter(v, k)) &&
-          (fields === true || fields.indexOf(k) >= 0)) {
+        (fields === true || fields.indexOf(k) >= 0)) {
         to[k] = v;
       }
     }, sources[index]);
@@ -76,8 +79,8 @@ export function assignFields<T extends object>(fields: (keyof T)[], target: T, s
   return assignFieldsWhen(fields, true, target, sources);
 }
 
-export function assignWhen<T extends object>(filter: VK<T, boolean> | true,  target: T, sources: Few<Partial<T>>): T {
-    return assignFieldsWhen(true, filter, target, sources);
+export function assignWhen<T extends object>(filter: VK<T, boolean> | true, target: T, sources: Few<Partial<T>>): T {
+  return assignFieldsWhen(true, filter, target, sources);
 }
 
 export function assign<T extends object>(target: T, ...sources: Partial<T>[]): T {
@@ -86,13 +89,19 @@ export function assign<T extends object>(target: T, ...sources: Partial<T>[]): T
 
 // Sane type conversion
 export function boolean(v: any, d?: boolean): boolean {
-  return v == null ? defined(d, v) : Truly(v);
+  return v == null || v === '' ?
+    defined(d, Defined(v) ? null : undefined) :
+    notnull(Bool(v, true), d, null);
 }
 
 export function number(v: any, d?: number): number {
-  return v == null ? defined(d, v) : (isNaN(v) ? null : +v);
+  return v == null || v === '' ?
+    defined(d, Defined(v) ? null : undefined) :
+    (isNaN(v) ? defined(d, null) : +v);
 }
 
 export function string(v: any, d?: string): string {
-  return v == null ? defined(d, v) : "" + v;
+  return v == null ?
+    defined(d, v) :
+    "" + v;
 }

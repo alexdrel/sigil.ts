@@ -20,8 +20,8 @@ describe("coalesce", () => {
 
 describe("predicates", () => {
   it("truly are", () => {
-    expect(Truly({a: 1})).toBe(true);
-    expect(Truly({a: false})).toBe(true);
+    expect(Truly({ a: 1 })).toBe(true);
+    expect(Truly({ a: false })).toBe(true);
     expect(Truly({})).toBe(false);
     expect(Truly([0])).toBe(true);
     expect(Truly([])).toBe(false);
@@ -30,11 +30,12 @@ describe("predicates", () => {
     expect(Truly(undefined)).toBe(false);
     expect(Truly(0)).toBe(false);
     expect(Truly('')).toBe(false);
+    expect(Truly('zz')).toBe(true);
     expect(Truly('0')).toBe(false);
   });
 
   it("NotNull are", () => {
-    expect(NotNull({a: 1})).toBe(true);
+    expect(NotNull({ a: 1 })).toBe(true);
     expect(NotNull(1)).toBe(true);
     expect(NotNull({})).toBe(true);
     expect(NotNull(null)).toBe(false);
@@ -45,7 +46,7 @@ describe("predicates", () => {
   });
 
   it("Defined are", () => {
-    expect(Defined({a: 1})).toBe(true);
+    expect(Defined({ a: 1 })).toBe(true);
     expect(Defined(1)).toBe(true);
     expect(Defined({})).toBe(true);
     expect(Defined(null)).toBe(true);
