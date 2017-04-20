@@ -7,6 +7,10 @@ export function defined<T>(v: T, v1: T, v2?: T): T {
   return (v !== undefined ? v : (v1 !== undefined ? v1 : v2));
 }
 
+export function maybe<T, R>(v: T | undefined | null, func: (vv: T) => R): R | undefined | null {
+  return v != null ? func(v) : v as any;
+}
+
 // Predicates
 // empty array and propertyless object considered falsy
 function Bool(v: any, strictString?: boolean): boolean | null {

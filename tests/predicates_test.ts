@@ -1,4 +1,4 @@
-import { defined, Defined, notnull, NotNull, Truly } from "../src/sigil";
+import { defined, Defined, maybe, notnull, NotNull, Truly } from "../src/sigil";
 
 describe("coalesce", () => {
   it("finds first not null", () => {
@@ -13,8 +13,22 @@ describe("coalesce", () => {
     let a: number = null;
     expect(defined(a, 2)).toBe(null);
     expect(defined(3, 2)).toBe(3);
+    expect(defined(undefined, null)).toBe(null);
     expect(defined(undefined, undefined, 3)).toBe(3);
     expect(defined(undefined, a, +("3"))).toBe(null);
+  });
+});
+
+describe("elvis operator", () => {
+  it("preform op for not null", () => {
+    expect(maybe(null, (v) => v + 2)).toBe(null);
+    expect(maybe(null, (v) => !v)).toBe(null);
+
+    expect(maybe(undefined, (v) => v + 2)).toBe(undefined);
+    expect(maybe(undefined, (v) => !v)).toBe(undefined);
+
+    expect(maybe(2, (v) => v + 2)).toBe(4);
+    expect(maybe(false, (v) => !v)).toBe(true);
   });
 });
 
