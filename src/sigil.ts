@@ -49,7 +49,7 @@ export type Partial<T> = {
 
 export function forEach<T extends object>(func: VK<T, void>, source: T): void {
   if (source != null) {
-    for (let key in source) {
+    for (const key in source) {
       if (Object.prototype.hasOwnProperty.call(source, key)) {
         func(source[key], key);
       }
@@ -66,8 +66,8 @@ export function assignFieldsWhen<T extends object>(
   if (target && filter == null) {
     throw new TypeError("Cannot convert undefined or null to object");
   }
-  let to = Object(target);
-  let sources = sourceS instanceof Array ? sourceS : [sourceS];
+  const to = Object(target);
+  const sources = sourceS instanceof Array ? sourceS : [sourceS];
   for (let index = 0; index < sources.length; index++) {
     forEach((v, k) => {
       if ((filter === true || filter(v, k)) &&
