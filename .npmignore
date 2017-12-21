@@ -5,3 +5,4 @@ karma.*
 .git*
 .editor*
 .vscode
+coverage

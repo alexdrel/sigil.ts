@@ -1,11 +1,8 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "noImplicitAny": true,
+    "strict": true,
     "removeComments": true,
-    "preserveConstEnums": true,
-    "noUnusedParameters": true,
-    "noUnusedLocals": true,
     "outDir": "../dist/",
     "declaration": true
   }

@@ -40,6 +40,10 @@ Empty means falsy :)
   assignFields(['a','c'], { a: null, b: 3} , { a: [ 4 ], b: 1000, c: []})
   // { a: [4], b: 3, c: []}
   // Fields are compile-time checked to belong in the target
+ 
+  // usefull for assign default values 
+  assignWhen(NotIn, { b: 3} , { a: [ 4 ], b: 44, c: []})
+  // { a: [4], b: 3, c: []}
 
   let to  = { a: 2, b: 2, c: 0 };
   forEach( (v, k) => {
@@ -60,12 +64,17 @@ function Defined(v: any): boolean;
 // empty array and propertyless object considered falsy
 function Truly(v: any): boolean;
 
+// field is null/undefined/not present in the target obejct
+function HostNull<T>(_v: any, key: keyof T, target: T): boolean;
+function HostUndefined<T>(_v: any, key: keyof T, target: T): boolean;
+function NotIn<T>(_v: any, key: keyof T, target: T): boolean;
+
 // forEach own propertry of an object
 function forEach<T extends object>(func: (v: any, k: keyof T) => void, source: T): void;
 
 // conditionally assing propertries of sources to target
 function assignWhen<T extends object>(
-  filter: (v: any, k: keyof T) => boolean,
+  filter: (v: any, k: keyof T, target: T) => boolean,
   target: T,
   sources: Partial<T> | Partial<T>[]
 ): T;
