@@ -1,17 +1,12 @@
-"use strict";
-exports.__esModule = true;
-function notnull(v, v1, v2) {
+export function notnull(v, v1, v2) {
     return (v != null ? v : (v1 != null ? v1 : v2));
 }
-exports.notnull = notnull;
-function defined(v, v1, v2) {
+export function defined(v, v1, v2) {
     return (v !== undefined ? v : (v1 !== undefined ? v1 : v2));
 }
-exports.defined = defined;
-function maybe(v, func) {
+export function maybe(v, func) {
     return v != null ? func(v) : v;
 }
-exports.maybe = maybe;
 function Bool(v, strictString) {
     if (v instanceof Array) {
         return v.length > 0;
@@ -35,16 +30,13 @@ function Bool(v, strictString) {
     }
     return !!v;
 }
-exports.NotNull = function (v) { return v != null; };
-exports.Defined = function (v) { return v !== undefined; };
-exports.Truly = function (v) { return Bool(v); };
-function HostNull(_v, k, t) { return t[k] == null; }
-exports.HostNull = HostNull;
-function HostUndefined(_v, k, t) { return t[k] === undefined; }
-exports.HostUndefined = HostUndefined;
-function NotIn(_v, k, t) { return !(k in t); }
-exports.NotIn = NotIn;
-function forEach(func, source) {
+export var NotNull = function (v) { return v != null; };
+export var Defined = function (v) { return v !== undefined; };
+export var Truly = function (v) { return Bool(v); };
+export function HostNull(_v, k, t) { return t[k] == null; }
+export function HostUndefined(_v, k, t) { return t[k] === undefined; }
+export function NotIn(_v, k, t) { return !(k in t); }
+export function forEach(func, source) {
     if (source != null) {
         for (var key in source) {
             if (Object.prototype.hasOwnProperty.call(source, key)) {
@@ -53,55 +45,48 @@ function forEach(func, source) {
         }
     }
 }
-exports.forEach = forEach;
-function assignFieldsWhen(fields, filter, target, sourceS) {
+export function assignFieldsWhen(fields, filter, target, sourceS) {
     if (target == null || filter == null) {
         throw new TypeError("Cannot convert undefined or null to object");
     }
     var to = Object(target);
     var sources = sourceS instanceof Array ? sourceS : [sourceS];
-    for (var index = 0; index < sources.length; index++) {
+    for (var _i = 0, sources_1 = sources; _i < sources_1.length; _i++) {
+        var source = sources_1[_i];
         forEach(function (v, k) {
             if ((filter === true || filter(v, k, to)) &&
                 (fields === true || fields.indexOf(k) >= 0)) {
                 to[k] = v;
             }
-        }, sources[index]);
+        }, source);
     }
     return to;
 }
-exports.assignFieldsWhen = assignFieldsWhen;
-function assignFields(fields, target, sources) {
+export function assignFields(fields, target, sources) {
     return assignFieldsWhen(fields, true, target, sources);
 }
-exports.assignFields = assignFields;
-function assignWhen(filter, target, sources) {
+export function assignWhen(filter, target, sources) {
     return assignFieldsWhen(true, filter, target, sources);
 }
-exports.assignWhen = assignWhen;
-function assign(target) {
+export function assign(target) {
     var sources = [];
     for (var _i = 1; _i < arguments.length; _i++) {
         sources[_i - 1] = arguments[_i];
     }
     return assignFieldsWhen(true, true, target, sources);
 }
-exports.assign = assign;
-function boolean(v, d) {
+export function boolean(v, d) {
     return v == null || v === '' ?
-        defined(d, exports.Defined(v) ? null : undefined) :
+        defined(d, Defined(v) ? null : undefined) :
         notnull(Bool(v, true), d, null);
 }
-exports.boolean = boolean;
-function number(v, d) {
+export function number(v, d) {
     return v == null || v === '' ?
-        defined(d, exports.Defined(v) ? null : undefined) :
+        defined(d, Defined(v) ? null : undefined) :
         (isNaN(v) ? defined(d, null) : +v);
 }
-exports.number = number;
-function string(v, d) {
+export function string(v, d) {
     return v == null ?
         defined(d, v) :
         "" + v;
 }
-exports.string = string;

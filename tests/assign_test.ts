@@ -2,10 +2,10 @@ import { assign, assignFields, assignFieldsWhen, assignWhen, HostNull, HostUndef
 import { boolean, forEach, notnull, NotNull, number, string, Truly } from "../src/sigil";
 
 interface ABc {
-  a: number | number[] | { a?: number };
-  b: number;
-  c?: number | number[] | { a?: number };
-};
+  a: null | number | number[] | { a?: number };
+  b: null | number;
+  c?: null | number | number[] | { a?: number };
+}
 
 describe("conditional assign", () => {
   it("basic assign", () => {
@@ -40,21 +40,21 @@ describe("conditional assign", () => {
   });
 
   it("throw on null target", () => {
-    expect(() => assign(null, {})).toThrow();
-  })
+    expect(() => assign(null as unknown as object, {})).toThrow();
+  });
 });
 
 interface Types {
-  b: boolean;
-  n: number;
-  n1?: number;
-  s: string;
+  b: boolean | null;
+  n: number | null;
+  n1?: number | null;
+  s?: string | null;
 }
 
 describe("assign/transform", () => {
   it("assign transform", () => {
     let tp: Types = { b: true, n: null, s: "str" };
-    let ov = { vb: 1, vn: "10", vs: undefined as string };
+    let ov = { vb: 1, vn: "10", vs: undefined as unknown as string };
 
     assignWhen(NotNull, tp, [{
       b: boolean(ov.vb),
@@ -89,6 +89,21 @@ describe("assign/transform", () => {
     expect(tp).toEqual({ b: true, n: null, n1: 11, s: undefined });
   });
 
+  it("forEach type", () => {
+    const x: { [k: number]: string } = {};
+    forEach((v, k) => {
+      v.toLocaleLowerCase();
+      k.toFixed();
+    }, x);
+
+    const xx: { [k: string]: number } = {};
+    let a: keyof typeof xx; // a is (string | number) in TS 3.1, not string as expected
+    forEach((v, _k) => {
+      // k.toLocaleLowerCase();
+      v.toFixed();
+    }, xx);
+  });
+
   it("forEach transform", () => {
     const $delete = {};
     const $inc = {};
@@ -98,15 +113,15 @@ describe("assign/transform", () => {
       a: number,
       p?: number[],
     } = {
-        eliminate: 5,
-        a: 2,
-      };
+      eliminate: 5,
+      a: 2,
+    };
 
-    forEach((v, k) => {
+    forEach((v: any, k) => {
       if (k === 'p') {
         to.p = v.split(',').map(number);
       } else if (v === $inc) {
-        to[k]++;
+        (to as any)[k]++;
       } else if (v === $delete) {
         delete to[k];
       }
@@ -125,7 +140,7 @@ describe("assign/transform", () => {
     };
 
     forEach((v, k) => {
-      to[k] = notnull(to[k], 0) + v;
+      to[k] = notnull((to as any)[k] , 0) + v;
     }, {
         b: 1,
         c: 4,

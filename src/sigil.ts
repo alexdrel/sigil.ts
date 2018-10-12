@@ -44,13 +44,8 @@ export function NotIn<T>(_v: any, k: keyof T, t: T) { return !(k in t); }
 // tslint:enable:variable-name
 
 // object forEach and (un-)conditional assign
-export type VK<T, R> = (v: any, k: keyof T, t: T) => R;
+export type VK<T, R, K extends keyof T = keyof T> = (v: T[K], k: keyof T, t: T) => R;
 export type Few<T> = T | T[];
-
-export type Partial<T> = {
-  // tslint:disable-next-line:semicolon
-  [P in keyof T]?: T[P];
-};
 
 export function forEach<T extends object>(func: VK<T, void>, source: T): void {
   if (source != null) {
@@ -73,13 +68,13 @@ export function assignFieldsWhen<T extends object>(
   }
   const to = Object(target);
   const sources = sourceS instanceof Array ? sourceS : [sourceS];
-  for (let index = 0; index < sources.length; index++) {
+  for (const source of sources) {
     forEach((v, k) => {
       if ((filter === true || filter(v, k, to)) &&
         (fields === true || fields.indexOf(k) >= 0)) {
         to[k] = v;
       }
-    }, sources[index]);
+    }, source as T);
   }
   return to;
 }
@@ -97,20 +92,20 @@ export function assign<T extends object>(target: T, ...sources: Partial<T>[]): T
 }
 
 // Sane type conversion
-export function boolean(v: any, d?: boolean): boolean | null | undefined {
+export function boolean(v: unknown, d?: boolean | null | undefined): boolean | null | undefined {
   return v == null || v === '' ?
     defined(d, Defined(v) ? null : undefined) :
     notnull(Bool(v, true), d, null);
 }
 
-export function number(v: any, d?: number): number | null | undefined {
+export function number(v: unknown, d?: number | null | undefined): number | null | undefined {
   return v == null || v === '' ?
     defined(d, Defined(v) ? null : undefined) :
-    (isNaN(v) ? defined(d, null) : +v);
+    (isNaN(v as number) ? defined(d, null) : +(v as any));
 }
 
-export function string(v: any, d?: string): string | null | undefined {
+export function string(v: unknown, d?: string | null | undefined): string | null | undefined {
   return v == null ?
-    defined(d, v) :
+    defined(d, v) as string | null :
     "" + v;
 }
