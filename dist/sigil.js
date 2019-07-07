@@ -90,3 +90,36 @@ export function string(v, d) {
         defined(d, v) :
         "" + v;
 }
+export function mergeByKeyWhen(filter, mergeKey) {
+    var sources = [];
+    for (var _i = 2; _i < arguments.length; _i++) {
+        sources[_i - 2] = arguments[_i];
+    }
+    var m = {};
+    for (var _a = 0, sources_2 = sources; _a < sources_2.length; _a++) {
+        var source = sources_2[_a];
+        for (var _b = 0, source_1 = source; _b < source_1.length; _b++) {
+            var item = source_1[_b];
+            var key = (typeof mergeKey === 'function') ? mergeKey(item) : item[mergeKey];
+            if (key != null) {
+                m[key] = assignWhen(filter, m[key] || {}, item);
+            }
+        }
+    }
+    return Object.keys(m).map(function (k) { return m[k]; });
+}
+export function mergeByKey(mergeKey) {
+    var sources = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        sources[_i - 1] = arguments[_i];
+    }
+    return mergeByKeyWhen.apply(void 0, [true, mergeKey].concat(sources));
+}
+export function uniqueKey(f) {
+    var r = Math.random().toFixed(5);
+    var u = 0;
+    return function (o) {
+        var k = f(o);
+        return k != null ? k : "__u_" + r + "_" + ++u;
+    };
+}

@@ -17,3 +17,10 @@ export declare function assign<T extends object>(target: T, ...sources: Partial<
 export declare function boolean(v: unknown, d?: boolean | null | undefined): boolean | null | undefined;
 export declare function number(v: unknown, d?: number | null | undefined): number | null | undefined;
 export declare function string(v: unknown, d?: string | null | undefined): string | null | undefined;
+declare type PossibleKeys<T> = {
+    [K in keyof T]: T[K] extends string | number ? K : never;
+}[keyof T];
+export declare function mergeByKeyWhen<T extends object>(filter: VK<T, boolean> | true, mergeKey: PossibleKeys<T> | ((o: T) => string | number), ...sources: T[][]): T[];
+export declare function mergeByKey<T extends object>(mergeKey: PossibleKeys<T> | ((o: T) => string | number), ...sources: T[][]): T[];
+export declare function uniqueKey<T extends object>(f: (o: T) => string | number | null | undefined): (o: T) => string | number;
+export {};

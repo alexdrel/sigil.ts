@@ -109,3 +109,40 @@ export function string(v: unknown, d?: string | null | undefined): string | null
     defined(d, v) as string | null :
     "" + v;
 }
+
+// Merge keyed object arrays
+type PossibleKeys<T> = { [K in keyof T]: T[K] extends string | number ? K : never }[keyof T];
+
+export function mergeByKeyWhen
+  <T extends object>(
+    filter: VK<T, boolean> | true,
+    mergeKey: PossibleKeys<T> | ((o: T) => string | number),
+    ...sources: T[][]): T[] {
+  const m: { [id: string /* T[K] */]: T } = {};
+  for (const source of sources) {
+    for (const item of source) {
+      const key = (typeof mergeKey === 'function') ? mergeKey(item) : item[mergeKey];
+      if (key != null) {
+        m[key as any] = assignWhen(filter, m[key as any] || ({} as T), item);
+      }
+    }
+  }
+  return Object.keys(m).map((k) => m[k]);
+}
+
+export function mergeByKey
+  <T extends object>(
+    mergeKey: PossibleKeys<T> | ((o: T) => string | number),
+    ...sources: T[][]): T[] {
+  return mergeByKeyWhen(true, mergeKey, ...sources);
+}
+
+export function uniqueKey<T extends object>(f: (o: T) => string | number | null | undefined) {
+  const r = Math.random().toFixed(5);
+  let u = 0;
+
+  return (o: T) => {
+    const k = f(o);
+    return k != null ? k : `__u_${r}_${++u}`;
+  };
+}
