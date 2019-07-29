@@ -23,4 +23,9 @@ declare type PossibleKeys<T> = {
 export declare function mergeByKeyWhen<T extends object>(filter: VK<T, boolean> | true, mergeKey: PossibleKeys<T> | ((o: T) => string | number), ...sources: T[][]): T[];
 export declare function mergeByKey<T extends object>(mergeKey: PossibleKeys<T> | ((o: T) => string | number), ...sources: T[][]): T[];
 export declare function uniqueKey<T extends object>(f: (o: T) => string | number | null | undefined): (o: T) => string | number;
+export declare type Schema<T> = {
+    [P in keyof T]: Schema<T[P]> | (T[P] extends object ? never : (v: any) => T[P] | null | undefined);
+};
+export declare function copyWithSchema<T>(schema: Schema<T>, data: object): T;
+export declare function withDefault<T>(p: (v: any, d?: T | null) => T | null | undefined, d: T | null): (v: any) => T | null | undefined;
 export {};

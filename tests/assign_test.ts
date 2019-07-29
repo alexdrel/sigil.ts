@@ -140,7 +140,7 @@ describe("assign/transform", () => {
     };
 
     forEach((v, k) => {
-      to[k] = notnull((to as any)[k] , 0) + v;
+      to[k] = notnull((to as any)[k], 0) + v;
     }, {
         b: 1,
         c: 4,

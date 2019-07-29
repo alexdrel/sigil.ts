@@ -20,6 +20,68 @@ Especially suited for parsing size optimized or sloppy JSON
   string(4) === '4'
 ```
 
+### "JSON" schema
+Fuzzy read of (JSON) object into strict schema based (Typescript) object: ```copyWithSchema```
+
+```typescript
+interface Content {
+  video?: {
+    url: string;
+    title?: string;
+    start: number;
+  }[];
+  image?: {
+    url?: string;
+    position?: string;
+  };
+  controls?: boolean;
+  order?: number[];
+}
+
+const ContentSchema: Schema<Content> = {
+  video: [{
+    url: string,
+    title: string,
+    start: withDefault(number, 0),
+  }],
+  image: {
+    url: string,
+    position: withDefault(string, "center"),
+  },
+  controls: boolean,
+  order: [number],
+};
+
+copyWithSchema(ContentSchema, 
+  {
+    video: "url0",
+    image: { url: "url1", position: "stretch" },
+    controls: "0",
+    order: "1",
+    junk: {
+       whatever: [],
+    }
+  }) 
+  /*
+  {
+    video: [
+      { url: "url0", start: 0 }
+      ],
+    image: { url: "url1", position: "stretch" },
+    controls: false,
+    order: [1],
+  }
+  */
+```
+
+Tricks:
++ Scalar values converted to single element arrays as needed
++ Scalar values converted to object with default (first) field set
++ Types are converted
++ Default values
++ Schema is typechecked againts the shape of the target type
++ Undefined or non-parsable fields are skipped
+
 ### Predicates
 Empty means falsy :)
 

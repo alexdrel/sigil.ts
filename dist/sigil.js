@@ -123,3 +123,40 @@ export function uniqueKey(f) {
         return k != null ? k : "__u_" + r + "_" + ++u;
     };
 }
+export function copyWithSchema(schema, data) {
+    var _a;
+    if (schema instanceof Function) {
+        return schema(data);
+    }
+    if (Array.isArray(schema)) {
+        if (Array.isArray(data)) {
+            return data.map(function (e) { return copyWithSchema(schema[0], e); });
+        }
+        else {
+            if (data === undefined) {
+                return (schema.length > 1 ? [] : data);
+            }
+            else {
+                return [copyWithSchema(schema[0], data)];
+            }
+        }
+    }
+    if (data == null) {
+        return data;
+    }
+    if (Array.isArray(data) || !(data instanceof Object)) {
+        var f = schema[''] || Object.keys(schema)[0];
+        data = (_a = {}, _a[f] = copyWithSchema(schema[f], data), _a);
+    }
+    var json = {};
+    Object.keys(schema).forEach(function (k) {
+        var v = copyWithSchema(schema[k], data[k]);
+        if (v !== undefined) {
+            json[k] = v;
+        }
+    });
+    return json;
+}
+export function withDefault(p, d) {
+    return function (v) { return p(v, d); };
+}

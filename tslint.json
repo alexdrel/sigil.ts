@@ -6,7 +6,6 @@
     ],
     "interface-name": false,
     "prefer-for-of": false,
-    "prefer-const": false,
     "object-literal-sort-keys": false,
     "variable-name": [ true,
       "ban-keywords", "check-format", "allow-leading-underscore", "allow-pascal-case"

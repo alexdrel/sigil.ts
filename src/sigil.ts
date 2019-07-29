@@ -146,3 +146,47 @@ export function uniqueKey<T extends object>(f: (o: T) => string | number | null 
     return k != null ? k : `__u_${r}_${++u}`;
   };
 }
+
+export type Schema<T> = {
+  [P in keyof T]: Schema<T[P]> | (T[P] extends object ? never : (v: any) => T[P] | null | undefined);
+};
+
+export function copyWithSchema<T>(schema: Schema<T>, data: object): T {
+  if (schema instanceof Function) {
+    return schema(data);
+  }
+
+  if (Array.isArray(schema)) {
+    if (Array.isArray(data)) {
+      return data.map((e: any) => copyWithSchema(schema[0], e)) as any;
+    } else {
+      if (data === undefined) {
+        return (schema.length > 1 ? [] : data) as any;
+      } else {
+        return [copyWithSchema(schema[0], data)] as any;
+      }
+    }
+  }
+
+  if (data == null) {
+    return data as any;
+  }
+
+  if (Array.isArray(data) || !(data instanceof Object)) {
+    const f: string = (schema as any)[''] || Object.keys(schema)[0];
+    data = { [f]: copyWithSchema((schema as any)[f], data) };
+  }
+
+  const json: any = {};
+  Object.keys(schema).forEach((k) => {
+    const v = copyWithSchema((schema as any)[k], (data as any)[k]);
+    if (v !== undefined) {
+      json[k] = v;
+    }
+  });
+  return json;
+}
+
+export function withDefault<T>(p: (v: any, d?: T | null) => T | null | undefined, d: T | null) {
+  return (v: any) => p(v, d);
+}
