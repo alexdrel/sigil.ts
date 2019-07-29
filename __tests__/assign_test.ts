@@ -32,7 +32,7 @@ describe("conditional assign", () => {
   });
 
   it("pick fields", () => {
-    let source = { a: null, c: 4, b: 5 } as ABc;
+    const source = { a: null, c: 4, b: 5 } as ABc;
     expect(assignFields(["a", "c"], { a: 2, b: 3 } as ABc, source))
       .toEqual({ a: null, b: 3, c: 4 });
     expect(assignFieldsWhen(["a", "c"], NotNull, { a: 2, b: 3 } as ABc, source))
@@ -53,8 +53,8 @@ interface Types {
 
 describe("assign/transform", () => {
   it("assign transform", () => {
-    let tp: Types = { b: true, n: null, s: "str" };
-    let ov = { vb: 1, vn: "10", vs: undefined as unknown as string };
+    const tp: Types = { b: true, n: null, s: "str" };
+    const ov = { vb: 1, vn: "10", vs: undefined as unknown as string };
 
     assignWhen(NotNull, tp, [{
       b: boolean(ov.vb),
@@ -69,21 +69,21 @@ describe("assign/transform", () => {
   });
 
   it("assign defaults - nulls", () => {
-    let tp: Types = { b: true, n: null, s: undefined };
+    const tp: Types = { b: true, n: null, s: undefined };
 
     assignWhen(HostNull, tp, { b: false, n: 10, n1: 11, s: "str" });
     expect(tp).toEqual({ b: true, n: 10, n1: 11, s: "str" });
   });
 
   it("assign defaults - undefined", () => {
-    let tp: Types = { b: true, n: null, s: undefined };
+    const tp: Types = { b: true, n: null, s: undefined };
 
     assignWhen(HostUndefined, tp, { b: false, n: 10, n1: 11, s: "str" });
     expect(tp).toEqual({ b: true, n: null, n1: 11, s: "str" });
   });
 
   it("assign defaults - not in", () => {
-    let tp: Types = { b: true, n: null, s: undefined };
+    const tp: Types = { b: true, n: null, s: undefined };
 
     assignWhen(NotIn, tp, { b: false, n: 10, n1: 11, s: "str" });
     expect(tp).toEqual({ b: true, n: null, n1: 11, s: undefined });
@@ -97,6 +97,7 @@ describe("assign/transform", () => {
     }, x);
 
     const xx: { [k: string]: number } = {};
+    // tslint:disable-next-line: prefer-const
     let a: keyof typeof xx; // a is (string | number) in TS 3.1, not string as expected
     forEach((v, _k) => {
       // k.toLocaleLowerCase();
@@ -104,11 +105,27 @@ describe("assign/transform", () => {
     }, xx);
   });
 
+  it("forEach own props", () => {
+    class Foo {
+      s = '';
+      // tslint:disable-next-line: no-empty
+      m() { }
+    }
+    const x = new Foo();
+    (x as any).a = 'a';
+    forEach((v, k) => {
+      expect(k).toMatch(/a|s/);
+      expect(k).not.toBe('m');
+    }, x);
+
+    forEach((v, k) => fail(), null as any);
+  });
+
   it("forEach transform", () => {
     const $delete = {};
     const $inc = {};
 
-    let to: {
+    const to: {
       eliminate?: number,
       a: number,
       p?: number[],
@@ -134,7 +151,7 @@ describe("assign/transform", () => {
   });
 
   it("sum", () => {
-    let to: ABc = {
+    const to: ABc = {
       a: 2,
       b: 2,
     };

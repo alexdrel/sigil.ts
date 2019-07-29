@@ -1,5 +1,4 @@
-import { mergeByKey, mergeByKeyWhen, NotIn, uniqueKey } from "../src/sigil";
-import { NotNull, Truly } from "../src/sigil";
+import { mergeByKey, mergeByKeyWhen, NotNull, string, Truly, uniqueKey } from "../src/sigil";
 
 interface Item {
   id: string | number;
@@ -34,6 +33,12 @@ describe("array merge", () => {
     ]);
     expect(mergeByKey((v) => v.a || '', a1, a2)).toEqual([
       { id: 1, a: 1 }, { id: 2, a: 2 }, { id: 4, a: 4 }, { id: 1, b: 1, c: "2" },
+    ]);
+    expect(mergeByKey((v) => string(v.a), a1, a2)).toEqual([
+      { id: 1, a: 1 }, { id: 2, a: 2 }, { id: 4, a: 4 },
+    ]);
+    expect(mergeByKey('a' as any, a1, a2)).toEqual([
+      { id: 1, a: 1 }, { id: 2, a: 2 }, { id: 4, a: 4 },
     ]);
   });
 });

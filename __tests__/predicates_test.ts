@@ -2,7 +2,7 @@ import { defined, Defined, maybe, notnull, NotNull, Truly } from "../src/sigil";
 
 describe("coalesce", () => {
   it("finds first not null", () => {
-    let a: number | null = null;
+    const a: number | null = null;
     expect(notnull(a, 2)).toBe(2);
     expect(notnull(3, 2)).toBe(3);
     expect(notnull(null as number | null, undefined, 3)).toBe(3);
@@ -10,7 +10,7 @@ describe("coalesce", () => {
   });
 
   it("finds first defined", () => {
-    let a: number | null = null;
+    const a: number | null = null;
     expect(defined(a, 2)).toBe(null);
     expect(defined(3, 2)).toBe(3);
     expect(defined(undefined, null)).toBe(null);

@@ -1,4 +1,4 @@
-import { copyWithSchema, boolean, number, string, withDefault, Schema } from "../src/sigil";
+import { boolean, copyWithSchema, number, Schema, string, withDefault } from "../src/sigil";
 
 describe("schema", () => {
   const schema = {
@@ -194,7 +194,7 @@ describe("content schema ", () => {
       order: "1",
       junk: {
         whatever: [],
-      }
+      },
     });
     expect(obj).toEqual({
       video: [{ url: "url0", start: 0 }],

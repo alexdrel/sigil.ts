@@ -10,6 +10,7 @@
     "variable-name": [ true,
       "ban-keywords", "check-format", "allow-leading-underscore", "allow-pascal-case"
     ],
+    "member-access": false,
     "array-type": [
       false
     ]

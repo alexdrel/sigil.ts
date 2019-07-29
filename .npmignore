@@ -6,3 +6,4 @@ karma.*
 .editor*
 .vscode
 coverage
+__tests__
