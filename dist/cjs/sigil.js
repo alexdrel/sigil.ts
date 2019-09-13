@@ -1,4 +1,11 @@
 "use strict";
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 function notnull(v, v1, v2) {
     return (v != null ? v : (v1 != null ? v1 : v2));
@@ -13,10 +20,10 @@ function maybe(v, func) {
 }
 exports.maybe = maybe;
 function Bool(v, strictString) {
-    if (v instanceof Array) {
+    if (Array.isArray(v)) {
         return v.length > 0;
     }
-    else if (v instanceof Object) {
+    else if (v && typeof v === 'object') {
         var r_1 = false;
         forEach(function () { return r_1 = true; }, v);
         return r_1;
@@ -59,7 +66,7 @@ function assignFieldsWhen(fields, filter, target, sourceS) {
         throw new TypeError("Cannot convert undefined or null to object");
     }
     var to = Object(target);
-    var sources = sourceS instanceof Array ? sourceS : [sourceS];
+    var sources = Array.isArray(sourceS) ? sourceS : [sourceS];
     for (var _i = 0, sources_1 = sources; _i < sources_1.length; _i++) {
         var source = sources_1[_i];
         forEach(function (v, k) {
@@ -130,7 +137,7 @@ function mergeByKey(mergeKey) {
     for (var _i = 1; _i < arguments.length; _i++) {
         sources[_i - 1] = arguments[_i];
     }
-    return mergeByKeyWhen.apply(void 0, [true, mergeKey].concat(sources));
+    return mergeByKeyWhen.apply(void 0, __spreadArrays([true, mergeKey], sources));
 }
 exports.mergeByKey = mergeByKey;
 function uniqueKey(f) {
@@ -163,7 +170,7 @@ function copyWithSchema(schema, data) {
     if (data == null) {
         return data;
     }
-    if (Array.isArray(data) || !(data instanceof Object)) {
+    if (Array.isArray(data) || typeof data !== 'object') {
         var f = schema[''] || Object.keys(schema)[0];
         data = (_a = {}, _a[f] = copyWithSchema(schema[f], data), _a);
     }

@@ -16,9 +16,9 @@ export function maybe<T, R>(v: T | undefined | null, func: (vv: T) => R): Opt<R>
 // Predicates
 // empty array and propertyless object considered falsy
 function Bool(v: any, strictString?: boolean): boolean | null {
-  if (v instanceof Array) {
+  if (Array.isArray(v)) {
     return v.length > 0;
-  } else if (v instanceof Object) {
+  } else if (v && typeof v === 'object') {
     let r = false;
     forEach(() => r = true, v);
     return r;
@@ -69,7 +69,7 @@ export function assignFieldsWhen<T extends object>(
     throw new TypeError("Cannot convert undefined or null to object");
   }
   const to = Object(target);
-  const sources = sourceS instanceof Array ? sourceS : [sourceS];
+  const sources = Array.isArray(sourceS) ? sourceS : [sourceS];
   for (const source of sources) {
     forEach((v, k) => {
       if ((filter === true || filter(v, k, to)) &&
@@ -174,7 +174,7 @@ export function copyWithSchema<T>(schema: Schema<T>, data: object): T {
     return data as any;
   }
 
-  if (Array.isArray(data) || !(data instanceof Object)) {
+  if (Array.isArray(data) || typeof data !== 'object') {
     const f: string = (schema as any)[''] || Object.keys(schema)[0];
     data = { [f]: copyWithSchema((schema as any)[f], data) };
   }
